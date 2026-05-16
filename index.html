@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulador Hipotecario Chile – Comparador de Bancos</title>
   <style>
-    /* ── Reset & base ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #f0f4f8;
@@ -36,7 +35,6 @@
       min-height: 100vh;
     }
 
-    /* ── Header ────────────────────────────────────────────────── */
     header {
       background: linear-gradient(135deg, var(--primary) 0%, #1240a0 60%, #0d2f7a 100%);
       color: #fff;
@@ -48,10 +46,8 @@
     header p  { margin-top: 6px; opacity: .85; font-size: .95rem; }
     .flag { font-size: 1.4rem; margin-right: 8px; }
 
-    /* ── Layout ─────────────────────────────────────────────────── */
     .container { max-width: 1280px; margin: 0 auto; padding: 32px 16px 64px; }
 
-    /* ── Form card ──────────────────────────────────────────────── */
     .form-card {
       background: var(--surface);
       border-radius: var(--radius);
@@ -114,7 +110,6 @@
     .btn-simulate:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,86,196,.45); }
     .btn-simulate:active { transform: translateY(0); }
 
-    /* ── UF notice ──────────────────────────────────────────────── */
     .uf-notice {
       display: inline-flex; align-items: center; gap: 8px;
       background: #eff6ff; border: 1px solid #bfdbfe;
@@ -122,7 +117,6 @@
       font-size: .82rem; color: #1e40af; margin-bottom: 20px;
     }
 
-    /* ── Summary pills ──────────────────────────────────────────── */
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -140,7 +134,6 @@
     .pill .pill-value { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
     .pill.best .pill-value { color: var(--green); }
 
-    /* ── Legend ──────────────────────────────────────────────────── */
     .legend {
       display: flex; flex-wrap: wrap; gap: 12px;
       margin-bottom: 20px; align-items: center;
@@ -148,7 +141,6 @@
     .legend-item { display: flex; align-items: center; gap: 6px; font-size: .82rem; color: var(--gray-600); }
     .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
 
-    /* ── Table wrapper ──────────────────────────────────────────── */
     .table-wrap {
       background: var(--surface);
       border-radius: var(--radius);
@@ -184,7 +176,6 @@
     tbody tr:last-child td { border-bottom: none; }
     tbody tr:hover { background: #f8fafc; }
 
-    /* ── Bank cell ──────────────────────────────────────────────── */
     .bank-cell { display: flex; align-items: center; gap: 10px; }
     .bank-logo {
       width: 36px; height: 36px; border-radius: 8px;
@@ -194,7 +185,6 @@
     .bank-name { font-weight: 600; font-size: .92rem; }
     .bank-type { font-size: .75rem; color: var(--gray-400); }
 
-    /* ── Row highlights ─────────────────────────────────────────── */
     tr.row-best td { background: var(--green-light); }
     tr.row-best td:first-child { border-left: 4px solid var(--green); }
     tr.row-best .bank-name { color: var(--green); font-weight: 800; }
@@ -205,7 +195,6 @@
     tr.row-mid td { background: var(--yellow-light); }
     tr.row-mid td:first-child { border-left: 4px solid var(--accent); }
 
-    /* ── Value badges ───────────────────────────────────────────── */
     .badge {
       display: inline-block;
       padding: 3px 9px;
@@ -222,10 +211,8 @@
     .val-worst { color: var(--red);    font-weight: 700; }
     .val-mid   { color: #b45309;       font-weight: 600; }
 
-    /* ── Rank medal ─────────────────────────────────────────────── */
     .rank { font-size: 1.3rem; }
 
-    /* ── Diff bar ───────────────────────────────────────────────── */
     .bar-wrap { display: flex; align-items: center; gap: 6px; min-width: 90px; }
     .bar-bg {
       flex: 1; height: 6px; border-radius: 3px;
@@ -233,7 +220,6 @@
     }
     .bar-fill { height: 100%; border-radius: 3px; transition: width .4s ease; }
 
-    /* ── Section title ──────────────────────────────────────────── */
     .section-title {
       font-size: 1.2rem; font-weight: 800;
       color: var(--gray-800); margin-bottom: 16px;
@@ -244,7 +230,6 @@
       background: linear-gradient(90deg, var(--gray-200), transparent);
     }
 
-    /* ── Amortization section ────────────────────────────────────── */
     .amort-controls {
       display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
       margin-bottom: 20px;
@@ -264,7 +249,6 @@
     .amort-wrap thead tr { background: linear-gradient(90deg, #0f4c81, #1a56c4); }
     .amort-wrap td { font-size: .85rem; }
 
-    /* ── Footer ─────────────────────────────────────────────────── */
     footer {
       text-align: center; padding: 24px;
       font-size: .8rem; color: var(--gray-400);
@@ -272,13 +256,11 @@
       margin-top: 40px;
     }
 
-    /* ── Responsive ─────────────────────────────────────────────── */
     @media (max-width: 640px) {
       .form-card { padding: 20px 16px; }
       th, td { padding: 10px 12px; }
     }
 
-    /* ── Spinner ─────────────────────────────────────────────────── */
     .spinner {
       display: none; width: 40px; height: 40px;
       border: 4px solid var(--gray-200);
@@ -289,10 +271,8 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Hidden ──────────────────────────────────────────────────── */
     .hidden { display: none !important; }
 
-    /* ── Tooltip ─────────────────────────────────────────────────── */
     [data-tip] { position: relative; cursor: help; }
     [data-tip]:hover::after {
       content: attr(data-tip);
@@ -314,7 +294,6 @@
 
 <div class="container">
 
-  <!-- ── Form ───────────────────────────────────────────────────── -->
   <div class="form-card">
     <h2>Datos de tu crédito</h2>
     <div class="uf-notice">
@@ -367,13 +346,10 @@
     </div>
   </div>
 
-  <!-- ── Results area ───────────────────────────────────────────── -->
   <div id="results" class="hidden">
 
-    <!-- Summary pills -->
     <div class="summary-grid" id="summary-pills"></div>
 
-    <!-- Comparison table -->
     <div class="section-title">📊 Cuadro Comparativo</div>
 
     <div class="legend">
@@ -404,7 +380,6 @@
       </table>
     </div>
 
-    <!-- Amortization -->
     <div style="margin-top:36px">
       <div class="section-title">📅 Tabla de Amortización</div>
       <div class="amort-controls">
@@ -429,382 +404,169 @@
       </div>
     </div>
 
-    <!-- Disclaimer -->
     <p style="margin-top:20px; font-size:.78rem; color:var(--gray-400); line-height:1.6;">
       ⚠️ <strong>Aviso:</strong> Las tasas y condiciones son referenciales basadas en datos públicos de la CMF y publicaciones de los bancos a mayo 2025.
       Pueden variar según perfil crediticio, historial y política comercial de cada institución.
       Consulta directamente con cada banco para una cotización formal.
     </p>
 
-  </div><!-- /results -->
+  </div>
 
   <div class="spinner" id="spinner"></div>
 
-</div><!-- /container -->
+</div>
 
 <footer>
   Simulador Hipotecario Chile — Datos referenciales CMF 2025 · No constituye oferta comercial
 </footer>
 
 <script>
-/* ─── Constants ───────────────────────────────────────────────────── */
-const UF_CLP = 38500; // UF value in CLP (referential May 2025)
+const UF_CLP = 38500;
 
-/* ─── Bank data ───────────────────────────────────────────────────── */
-// tasaFija/tasaVariable/tasaMixta: annual nominal rate %
-// cae offset adds realistic spread over nominal
-// seguroDesgravamen: % annual over outstanding balance
-// seguroIncendio: % annual over property UF value
-// gastosOp: UF flat
 const BANKS = [
-  {
-    id: 'bci', name: 'BCI', fullName: 'Banco de Crédito e Inversiones',
-    color: '#004B87',
-    tasaFija: 4.65, tasaVariable: 3.95, tasaMixta: 4.20,
-    caeOffset: 0.55,
-    seguroDesgravamen: 0.030, seguroIncendio: 0.018,
-    gastosOp: 25, financiamientoMax: 80,
-  },
-  {
-    id: 'bancochile', name: 'Banco Chile', fullName: 'Banco de Chile',
-    color: '#E3000F',
-    tasaFija: 4.50, tasaVariable: 3.80, tasaMixta: 4.10,
-    caeOffset: 0.50,
-    seguroDesgravamen: 0.028, seguroIncendio: 0.017,
-    gastosOp: 22, financiamientoMax: 80,
-  },
-  {
-    id: 'santander', name: 'Santander', fullName: 'Banco Santander Chile',
-    color: '#EC0000',
-    tasaFija: 4.80, tasaVariable: 4.05, tasaMixta: 4.35,
-    caeOffset: 0.60,
-    seguroDesgravamen: 0.032, seguroIncendio: 0.019,
-    gastosOp: 28, financiamientoMax: 80,
-  },
-  {
-    id: 'scotiabank', name: 'Scotiabank', fullName: 'Scotiabank Chile',
-    color: '#EC111A',
-    tasaFija: 4.70, tasaVariable: 4.00, tasaMixta: 4.25,
-    caeOffset: 0.58,
-    seguroDesgravamen: 0.031, seguroIncendio: 0.018,
-    gastosOp: 26, financiamientoMax: 80,
-  },
-  {
-    id: 'itau', name: 'Itaú', fullName: 'Itaú Corpbanca',
-    color: '#FF6600',
-    tasaFija: 4.90, tasaVariable: 4.15, tasaMixta: 4.40,
-    caeOffset: 0.62,
-    seguroDesgravamen: 0.033, seguroIncendio: 0.019,
-    gastosOp: 30, financiamientoMax: 80,
-  },
-  {
-    id: 'bice', name: 'BICE', fullName: 'Banco BICE',
-    color: '#003087',
-    tasaFija: 4.55, tasaVariable: 3.85, tasaMixta: 4.15,
-    caeOffset: 0.52,
-    seguroDesgravamen: 0.029, seguroIncendio: 0.017,
-    gastosOp: 20, financiamientoMax: 75,
-  },
-  {
-    id: 'security', name: 'Banco Security', fullName: 'Banco Security',
-    color: '#005CA9',
-    tasaFija: 4.75, tasaVariable: 4.02, tasaMixta: 4.30,
-    caeOffset: 0.57,
-    seguroDesgravamen: 0.030, seguroIncendio: 0.018,
-    gastosOp: 24, financiamientoMax: 80,
-  },
-  {
-    id: 'estado', name: 'BancoEstado', fullName: 'BancoEstado',
-    color: '#C8102E',
-    tasaFija: 4.40, tasaVariable: 3.75, tasaMixta: 4.05,
-    caeOffset: 0.48,
-    seguroDesgravamen: 0.025, seguroIncendio: 0.016,
-    gastosOp: 18, financiamientoMax: 90,
-  },
-  {
-    id: 'falabella', name: 'Banco Falabella', fullName: 'Banco Falabella',
-    color: '#64B32C',
-    tasaFija: 5.10, tasaVariable: 4.30, tasaMixta: 4.60,
-    caeOffset: 0.70,
-    seguroDesgravamen: 0.035, seguroIncendio: 0.021,
-    gastosOp: 32, financiamientoMax: 80,
-  },
-  {
-    id: 'ripley', name: 'Banco Ripley', fullName: 'Banco Ripley',
-    color: '#820B2B',
-    tasaFija: 5.20, tasaVariable: 4.40, tasaMixta: 4.70,
-    caeOffset: 0.72,
-    seguroDesgravamen: 0.036, seguroIncendio: 0.022,
-    gastosOp: 34, financiamientoMax: 80,
-  },
-  {
-    id: 'coopeuch', name: 'Coopeuch', fullName: 'Coopeuch (Cooperativa)',
-    color: '#0066CC',
-    tasaFija: 4.35, tasaVariable: 3.70, tasaMixta: 4.00,
-    caeOffset: 0.46,
-    seguroDesgravamen: 0.024, seguroIncendio: 0.016,
-    gastosOp: 16, financiamientoMax: 80,
-  },
-  {
-    id: 'bbt', name: 'BTG Pactual', fullName: 'BTG Pactual Chile',
-    color: '#1C2B5A',
-    tasaFija: 4.60, tasaVariable: 3.90, tasaMixta: 4.18,
-    caeOffset: 0.53,
-    seguroDesgravamen: 0.029, seguroIncendio: 0.017,
-    gastosOp: 22, financiamientoMax: 75,
-  },
-  {
-    id: 'bbva', name: 'BBVA', fullName: 'BBVA Chile',
-    color: '#004481',
-    tasaFija: 4.85, tasaVariable: 4.10, tasaMixta: 4.38,
-    caeOffset: 0.61,
-    seguroDesgravamen: 0.032, seguroIncendio: 0.019,
-    gastosOp: 27, financiamientoMax: 80,
-  },
-  {
-    id: 'internacional', name: 'Bco. Internacional', fullName: 'Banco Internacional',
-    color: '#2D5DA1',
-    tasaFija: 5.00, tasaVariable: 4.25, tasaMixta: 4.55,
-    caeOffset: 0.65,
-    seguroDesgravamen: 0.034, seguroIncendio: 0.020,
-    gastosOp: 30, financiamientoMax: 75,
-  },
+  { id:'bci',name:'BCI',fullName:'Banco de Crédito e Inversiones',color:'#004B87',tasaFija:4.65,tasaVariable:3.95,tasaMixta:4.20,caeOffset:0.55,seguroDesgravamen:0.030,seguroIncendio:0.018,gastosOp:25,financiamientoMax:80 },
+  { id:'bancochile',name:'Banco Chile',fullName:'Banco de Chile',color:'#E3000F',tasaFija:4.50,tasaVariable:3.80,tasaMixta:4.10,caeOffset:0.50,seguroDesgravamen:0.028,seguroIncendio:0.017,gastosOp:22,financiamientoMax:80 },
+  { id:'santander',name:'Santander',fullName:'Banco Santander Chile',color:'#EC0000',tasaFija:4.80,tasaVariable:4.05,tasaMixta:4.35,caeOffset:0.60,seguroDesgravamen:0.032,seguroIncendio:0.019,gastosOp:28,financiamientoMax:80 },
+  { id:'scotiabank',name:'Scotiabank',fullName:'Scotiabank Chile',color:'#EC111A',tasaFija:4.70,tasaVariable:4.00,tasaMixta:4.25,caeOffset:0.58,seguroDesgravamen:0.031,seguroIncendio:0.018,gastosOp:26,financiamientoMax:80 },
+  { id:'itau',name:'Itaú',fullName:'Itaú Corpbanca',color:'#FF6600',tasaFija:4.90,tasaVariable:4.15,tasaMixta:4.40,caeOffset:0.62,seguroDesgravamen:0.033,seguroIncendio:0.019,gastosOp:30,financiamientoMax:80 },
+  { id:'bice',name:'BICE',fullName:'Banco BICE',color:'#003087',tasaFija:4.55,tasaVariable:3.85,tasaMixta:4.15,caeOffset:0.52,seguroDesgravamen:0.029,seguroIncendio:0.017,gastosOp:20,financiamientoMax:75 },
+  { id:'security',name:'Banco Security',fullName:'Banco Security',color:'#005CA9',tasaFija:4.75,tasaVariable:4.02,tasaMixta:4.30,caeOffset:0.57,seguroDesgravamen:0.030,seguroIncendio:0.018,gastosOp:24,financiamientoMax:80 },
+  { id:'estado',name:'BancoEstado',fullName:'BancoEstado',color:'#C8102E',tasaFija:4.40,tasaVariable:3.75,tasaMixta:4.05,caeOffset:0.48,seguroDesgravamen:0.025,seguroIncendio:0.016,gastosOp:18,financiamientoMax:90 },
+  { id:'falabella',name:'Banco Falabella',fullName:'Banco Falabella',color:'#64B32C',tasaFija:5.10,tasaVariable:4.30,tasaMixta:4.60,caeOffset:0.70,seguroDesgravamen:0.035,seguroIncendio:0.021,gastosOp:32,financiamientoMax:80 },
+  { id:'ripley',name:'Banco Ripley',fullName:'Banco Ripley',color:'#820B2B',tasaFija:5.20,tasaVariable:4.40,tasaMixta:4.70,caeOffset:0.72,seguroDesgravamen:0.036,seguroIncendio:0.022,gastosOp:34,financiamientoMax:80 },
+  { id:'coopeuch',name:'Coopeuch',fullName:'Coopeuch (Cooperativa)',color:'#0066CC',tasaFija:4.35,tasaVariable:3.70,tasaMixta:4.00,caeOffset:0.46,seguroDesgravamen:0.024,seguroIncendio:0.016,gastosOp:16,financiamientoMax:80 },
+  { id:'bbt',name:'BTG Pactual',fullName:'BTG Pactual Chile',color:'#1C2B5A',tasaFija:4.60,tasaVariable:3.90,tasaMixta:4.18,caeOffset:0.53,seguroDesgravamen:0.029,seguroIncendio:0.017,gastosOp:22,financiamientoMax:75 },
+  { id:'bbva',name:'BBVA',fullName:'BBVA Chile',color:'#004481',tasaFija:4.85,tasaVariable:4.10,tasaMixta:4.38,caeOffset:0.61,seguroDesgravamen:0.032,seguroIncendio:0.019,gastosOp:27,financiamientoMax:80 },
+  { id:'internacional',name:'Bco. Internacional',fullName:'Banco Internacional',color:'#2D5DA1',tasaFija:5.00,tasaVariable:4.25,tasaMixta:4.55,caeOffset:0.65,seguroDesgravamen:0.034,seguroIncendio:0.020,gastosOp:30,financiamientoMax:75 },
 ];
 
-/* ─── State ───────────────────────────────────────────────────────── */
 let lastResults = [];
 
-/* ─── Helpers ─────────────────────────────────────────────────────── */
-function fmtUF(v)   { return 'UF ' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
-function fmtCLP(v)  { return '$' + Math.round(v).toLocaleString('es-CL'); }
-function fmtPct(v)  { return v.toFixed(2) + '%'; }
+function fmtUF(v)  { return 'UF ' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+function fmtCLP(v) { return '$' + Math.round(v).toLocaleString('es-CL'); }
+function fmtPct(v) { return v.toFixed(2) + '%'; }
+function displayVal(v, currency) { return currency === 'UF' ? fmtUF(v) : fmtCLP(v * UF_CLP); }
 
-function displayVal(v, currency) {
-  return currency === 'UF' ? fmtUF(v) : fmtCLP(v * UF_CLP);
-}
-
-/* Monthly payment PMT in UF */
 function pmt(rate, n, pv) {
   if (rate === 0) return pv / n;
   const r = rate / 12;
-  return pv * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  return pv * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
 }
 
-/* ─── Core simulation ─────────────────────────────────────────────── */
 function calcBank(bank, loanUF, years, rateType, propValueUF) {
   const n = years * 12;
-  const rate = rateType === 'fija'     ? bank.tasaFija     / 100
-             : rateType === 'variable'  ? bank.tasaVariable / 100
-             : bank.tasaMixta          / 100;
-
+  const rate = rateType==='fija' ? bank.tasaFija/100 : rateType==='variable' ? bank.tasaVariable/100 : bank.tasaMixta/100;
   const capitalPayment = pmt(rate, n, loanUF);
-
-  // Monthly insurance (on initial balance — simplified)
-  const segDesgrav  = loanUF * (bank.seguroDesgravamen / 100) / 12;
-  const segIncendio = propValueUF * (bank.seguroIncendio / 100) / 12;
+  const segDesgrav  = loanUF * (bank.seguroDesgravamen/100) / 12;
+  const segIncendio = propValueUF * (bank.seguroIncendio/100) / 12;
   const totalInsurance = segDesgrav + segIncendio;
-
   const monthlyTotal = capitalPayment + totalInsurance;
-  const totalPaid    = monthlyTotal * n + bank.gastosOp;
-  const totalInterest= totalPaid - loanUF - bank.gastosOp - totalInsurance * n;
-  const cae          = (rate * 100) + bank.caeOffset;
-
-  // Build amortization schedule
+  const totalPaid = monthlyTotal * n + bank.gastosOp;
+  const totalInterest = totalPaid - loanUF - bank.gastosOp - totalInsurance*n;
+  const cae = (rate*100) + bank.caeOffset;
   const schedule = [];
   let balance = loanUF;
-  for (let i = 1; i <= n; i++) {
-    const interest = balance * (rate / 12);
+  for (let i=1; i<=n; i++) {
+    const interest = balance*(rate/12);
     const principal = capitalPayment - interest;
-    balance = Math.max(0, balance - principal);
-    schedule.push({ cuota: i, total: monthlyTotal, principal, interest, insurance: totalInsurance, balance });
+    balance = Math.max(0, balance-principal);
+    schedule.push({ cuota:i, total:monthlyTotal, principal, interest, insurance:totalInsurance, balance });
   }
-
-  return {
-    bank,
-    rate: rate * 100,
-    cae,
-    capitalPayment,
-    insurance: totalInsurance,
-    monthlyTotal,
-    totalPaid,
-    totalInterest,
-    gastosOp: bank.gastosOp,
-    schedule,
-  };
+  return { bank, rate:rate*100, cae, capitalPayment, insurance:totalInsurance, monthlyTotal, totalPaid, totalInterest, gastosOp:bank.gastosOp, schedule };
 }
 
-/* ─── Simulate ────────────────────────────────────────────────────── */
 function simulate() {
-  const propValueUF  = parseFloat(document.getElementById('propValue').value);
-  const downPct      = parseFloat(document.getElementById('downPayment').value) / 100;
-  const years        = parseInt(document.getElementById('term').value);
-  const rateType     = document.getElementById('rateType').value;
-  const currency     = document.getElementById('currency').value;
-
-  if (isNaN(propValueUF) || propValueUF <= 0) { alert('Ingresa un valor de propiedad válido.'); return; }
-  if (downPct < 0.10) { alert('El pie mínimo es 10%.'); return; }
-
-  const loanUF = propValueUF * (1 - downPct);
-
-  // Show spinner briefly for UX
-  document.getElementById('spinner').style.display = 'block';
+  const propValueUF = parseFloat(document.getElementById('propValue').value);
+  const downPct     = parseFloat(document.getElementById('downPayment').value)/100;
+  const years       = parseInt(document.getElementById('term').value);
+  const rateType    = document.getElementById('rateType').value;
+  const currency    = document.getElementById('currency').value;
+  if (isNaN(propValueUF)||propValueUF<=0){alert('Ingresa un valor de propiedad válido.');return;}
+  if (downPct<0.10){alert('El pie mínimo es 10%.');return;}
+  const loanUF = propValueUF*(1-downPct);
+  document.getElementById('spinner').style.display='block';
   document.getElementById('results').classList.add('hidden');
-
-  setTimeout(() => {
-    document.getElementById('spinner').style.display = 'none';
-
-    const results = BANKS
-      .filter(b => Math.round((1 - downPct) * 100) <= b.financiamientoMax)
-      .map(b => calcBank(b, loanUF, years, rateType, propValueUF));
-
-    // Sort by CAE ascending
-    results.sort((a, b) => a.cae - b.cae);
-    lastResults = results;
-
-    renderSummary(results, loanUF, propValueUF, downPct, years, currency);
-    renderTable(results, currency);
+  setTimeout(()=>{
+    document.getElementById('spinner').style.display='none';
+    const results = BANKS.filter(b=>Math.round((1-downPct)*100)<=b.financiamientoMax).map(b=>calcBank(b,loanUF,years,rateType,propValueUF));
+    results.sort((a,b)=>a.cae-b.cae);
+    lastResults=results;
+    renderSummary(results,loanUF,propValueUF,downPct,years,currency);
+    renderTable(results,currency);
     renderAmortSelect(results);
     renderAmort();
-
     document.getElementById('results').classList.remove('hidden');
-    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 350);
+    document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+  },350);
 }
 
-/* ─── Summary pills ───────────────────────────────────────────────── */
-function renderSummary(results, loanUF, propValueUF, downPct, years, currency) {
-  const best  = results[0];
-  const worst = results[results.length - 1];
-  const diff  = worst.monthlyTotal - best.monthlyTotal;
-
-  const pills = [
-    { label: 'Monto financiado', value: displayVal(loanUF, currency) },
-    { label: 'Pie', value: displayVal(propValueUF * downPct, currency) + ' (' + Math.round(downPct * 100) + '%)' },
-    { label: 'Mejor cuota mensual', value: displayVal(best.monthlyTotal, currency), best: true },
-    { label: 'Mejor banco', value: best.bank.name, best: true },
-    { label: 'Mejor CAE', value: fmtPct(best.cae), best: true },
-    { label: 'Ahorro vs peor', value: displayVal(diff, currency) + '/mes', best: true },
+function renderSummary(results,loanUF,propValueUF,downPct,years,currency){
+  const best=results[0],worst=results[results.length-1];
+  const diff=worst.monthlyTotal-best.monthlyTotal;
+  const pills=[
+    {label:'Monto financiado',value:displayVal(loanUF,currency)},
+    {label:'Pie',value:displayVal(propValueUF*downPct,currency)+' ('+Math.round(downPct*100)+'%)'},
+    {label:'Mejor cuota mensual',value:displayVal(best.monthlyTotal,currency),best:true},
+    {label:'Mejor banco',value:best.bank.name,best:true},
+    {label:'Mejor CAE',value:fmtPct(best.cae),best:true},
+    {label:'Ahorro vs peor',value:displayVal(diff,currency)+'/mes',best:true},
   ];
-
-  document.getElementById('summary-pills').innerHTML = pills.map(p => `
-    <div class="pill ${p.best ? 'best' : ''}">
-      <div class="pill-label">${p.label}</div>
-      <div class="pill-value">${p.value}</div>
-    </div>
-  `).join('');
+  document.getElementById('summary-pills').innerHTML=pills.map(p=>`<div class="pill ${p.best?'best':''}"><div class="pill-label">${p.label}</div><div class="pill-value">${p.value}</div></div>`).join('');
 }
 
-/* ─── Comparison table ────────────────────────────────────────────── */
-function renderTable(results, currency) {
-  const bestCAE     = results[0].cae;
-  const bestMonthly = results[0].monthlyTotal;
-  const worstCAE    = results[results.length - 1].cae;
-
-  const medals = ['🥇','🥈','🥉'];
-  const maxDiff = results[results.length - 1].monthlyTotal - results[0].monthlyTotal;
-
-  const rows = results.map((r, i) => {
-    const isBest  = i === 0;
-    const isWorst = i === results.length - 1;
-    const isMid   = !isBest && !isWorst && i <= Math.floor(results.length / 2);
-
-    const rowClass = isBest ? 'row-best' : isWorst ? 'row-worst' : (isMid ? '' : '');
-    const caeClass = isBest ? 'val-best' : isWorst ? 'val-worst' : 'val-mid';
-    const monthClass = isBest ? 'val-best' : isWorst ? 'val-worst' : '';
-
-    const badge = isBest  ? '<span class="badge badge-green">Mejor</span>'
-                : isWorst ? '<span class="badge badge-red">Más caro</span>'
-                : i < 3   ? '<span class="badge badge-blue">Top 3</span>' : '';
-
-    const diff = r.monthlyTotal - bestMonthly;
-    const barPct = maxDiff > 0 ? Math.round((diff / maxDiff) * 100) : 0;
-    const barColor = isBest ? '#059669' : isWorst ? '#dc2626' : '#f59e0b';
-
-    const initials = r.bank.name.substring(0, 2).toUpperCase();
-
+function renderTable(results,currency){
+  const bestMonthly=results[0].monthlyTotal;
+  const maxDiff=results[results.length-1].monthlyTotal-results[0].monthlyTotal;
+  const medals=['🥇','🥈','🥉'];
+  const rows=results.map((r,i)=>{
+    const isBest=i===0,isWorst=i===results.length-1;
+    const rowClass=isBest?'row-best':isWorst?'row-worst':'';
+    const caeClass=isBest?'val-best':isWorst?'val-worst':'val-mid';
+    const monthClass=isBest?'val-best':isWorst?'val-worst':'';
+    const badge=isBest?'<span class="badge badge-green">Mejor</span>':isWorst?'<span class="badge badge-red">Más caro</span>':i<3?'<span class="badge badge-blue">Top 3</span>':'';
+    const diff=r.monthlyTotal-bestMonthly;
+    const barPct=maxDiff>0?Math.round((diff/maxDiff)*100):0;
+    const barColor=isBest?'#059669':isWorst?'#dc2626':'#f59e0b';
+    const initials=r.bank.name.substring(0,2).toUpperCase();
     return `<tr class="${rowClass}">
-      <td class="center"><span class="rank">${medals[i] || (i + 1)}</span></td>
-      <td>
-        <div class="bank-cell">
-          <div class="bank-logo" style="background:${r.bank.color}">${initials}</div>
-          <div>
-            <div class="bank-name">${r.bank.name} ${badge}</div>
-            <div class="bank-type">${r.bank.fullName}</div>
-          </div>
-        </div>
-      </td>
+      <td class="center"><span class="rank">${medals[i]||(i+1)}</span></td>
+      <td><div class="bank-cell"><div class="bank-logo" style="background:${r.bank.color}">${initials}</div><div><div class="bank-name">${r.bank.name} ${badge}</div><div class="bank-type">${r.bank.fullName}</div></div></div></td>
       <td class="right"><strong class="${caeClass}">${fmtPct(r.cae)}</strong></td>
       <td class="right">${fmtPct(r.rate)}</td>
-      <td class="right"><strong class="${monthClass}">${displayVal(r.monthlyTotal, currency)}</strong></td>
-      <td class="right" style="color:var(--gray-600)">${displayVal(r.insurance, currency)}</td>
-      <td class="right">${displayVal(r.totalPaid, currency)}</td>
-      <td class="right" style="color:${isWorst?'var(--red)':'inherit'}">${displayVal(r.totalInterest, currency)}</td>
-      <td class="right">${displayVal(r.gastosOp, currency)}</td>
-      <td class="center">
-        <div class="bar-wrap">
-          <div class="bar-bg"><div class="bar-fill" style="width:${Math.max(4, barPct)}%;background:${barColor}"></div></div>
-          <span style="font-size:.75rem;color:var(--gray-400);width:32px;text-align:right">${barPct}%</span>
-        </div>
-      </td>
-      <td class="right" style="color:${diff===0?'var(--green)':'var(--gray-600)'}">
-        ${diff === 0 ? '<strong style="color:var(--green)">— referencia</strong>'
-                     : '+' + displayVal(diff, currency) + '/mes'}
-      </td>
+      <td class="right"><strong class="${monthClass}">${displayVal(r.monthlyTotal,currency)}</strong></td>
+      <td class="right" style="color:var(--gray-600)">${displayVal(r.insurance,currency)}</td>
+      <td class="right">${displayVal(r.totalPaid,currency)}</td>
+      <td class="right" style="color:${isWorst?'var(--red)':'inherit'}">${displayVal(r.totalInterest,currency)}</td>
+      <td class="right">${displayVal(r.gastosOp,currency)}</td>
+      <td class="center"><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${Math.max(4,barPct)}%;background:${barColor}"></div></div><span style="font-size:.75rem;color:var(--gray-400);width:32px;text-align:right">${barPct}%</span></div></td>
+      <td class="right" style="color:${diff===0?'var(--green)':'var(--gray-600)'}">${diff===0?'<strong style="color:var(--green)">— referencia</strong>':'+'+displayVal(diff,currency)+'/mes'}</td>
     </tr>`;
   });
-
-  document.getElementById('table-body').innerHTML = rows.join('');
+  document.getElementById('table-body').innerHTML=rows.join('');
 }
 
-/* ─── Amortization select ─────────────────────────────────────────── */
-function renderAmortSelect(results) {
-  const sel = document.getElementById('amort-bank');
-  sel.innerHTML = results.map((r, i) =>
-    `<option value="${i}">${r.bank.name} – CAE ${fmtPct(r.cae)}</option>`
-  ).join('');
+function renderAmortSelect(results){
+  document.getElementById('amort-bank').innerHTML=results.map((r,i)=>`<option value="${i}">${r.bank.name} – CAE ${fmtPct(r.cae)}</option>`).join('');
 }
 
-/* ─── Amortization table ──────────────────────────────────────────── */
-function renderAmort() {
-  const idx      = parseInt(document.getElementById('amort-bank').value || '0');
-  const r        = lastResults[idx];
-  if (!r) return;
-
-  const currency = document.getElementById('currency').value;
-  const n        = r.schedule.length;
-  const totalCapital = r.schedule.reduce((s, x) => s + x.principal, 0);
-
-  let capitalAccum = 0;
-  const rows = r.schedule.map(s => {
-    capitalAccum += s.principal;
-    const capitalPct = ((capitalAccum / totalCapital) * 100).toFixed(1);
-    const barW = Math.round(capitalAccum / totalCapital * 60);
-    return `<tr>
-      <td class="center">${s.cuota}</td>
-      <td class="right">${displayVal(s.total, currency)}</td>
-      <td class="right">${displayVal(s.principal, currency)}</td>
-      <td class="right" style="color:var(--red)">${displayVal(s.interest, currency)}</td>
-      <td class="right" style="color:var(--gray-400)">${displayVal(s.insurance, currency)}</td>
-      <td class="right" style="color:var(--primary)">${displayVal(s.balance, currency)}</td>
-      <td class="right">
-        <div class="bar-wrap">
-          <div class="bar-bg" style="width:60px"><div class="bar-fill" style="width:${barW}px;background:var(--green)"></div></div>
-          <span style="font-size:.72rem;color:var(--gray-600)">${capitalPct}%</span>
-        </div>
-      </td>
-    </tr>`;
+function renderAmort(){
+  const idx=parseInt(document.getElementById('amort-bank').value||'0');
+  const r=lastResults[idx];
+  if(!r)return;
+  const currency=document.getElementById('currency').value;
+  const totalCapital=r.schedule.reduce((s,x)=>s+x.principal,0);
+  let capitalAccum=0;
+  const rows=r.schedule.map(s=>{
+    capitalAccum+=s.principal;
+    const capitalPct=((capitalAccum/totalCapital)*100).toFixed(1);
+    const barW=Math.round(capitalAccum/totalCapital*60);
+    return `<tr><td class="center">${s.cuota}</td><td class="right">${displayVal(s.total,currency)}</td><td class="right">${displayVal(s.principal,currency)}</td><td class="right" style="color:var(--red)">${displayVal(s.interest,currency)}</td><td class="right" style="color:var(--gray-400)">${displayVal(s.insurance,currency)}</td><td class="right" style="color:var(--primary)">${displayVal(s.balance,currency)}</td><td class="right"><div class="bar-wrap"><div class="bar-bg" style="width:60px"><div class="bar-fill" style="width:${barW}px;background:var(--green)"></div></div><span style="font-size:.72rem;color:var(--gray-600)">${capitalPct}%</span></div></td></tr>`;
   });
-
-  document.getElementById('amort-body').innerHTML = rows.join('');
+  document.getElementById('amort-body').innerHTML=rows.join('');
 }
 
-/* ─── Auto-simulate on load ───────────────────────────────────────── */
-window.addEventListener('DOMContentLoaded', () => {
-  // Update UF display
-  document.getElementById('uf-value').textContent =
-    '$' + UF_CLP.toLocaleString('es-CL') + ' CLP';
-
-  // Run default simulation
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('uf-value').textContent='$'+UF_CLP.toLocaleString('es-CL')+' CLP';
   simulate();
 });
 </script>
