@@ -303,6 +303,35 @@
       font-size: .75rem; white-space: nowrap;
       z-index: 99; pointer-events: none;
     }
+
+    /* ── Input currency toggle ────────────────────────────────────── */
+    .currency-toggle {
+      display: flex; border: 1.5px solid var(--gray-200);
+      border-radius: 8px; overflow: hidden; margin-bottom: 6px;
+    }
+    .currency-toggle button {
+      flex: 1; padding: 5px 0; border: none; background: var(--gray-100);
+      font-size: .75rem; font-weight: 700; color: var(--gray-400);
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .currency-toggle button.active {
+      background: var(--primary); color: #fff;
+    }
+
+    /* ── Grace period rows in amortization ────────────────────────── */
+    tr.row-grace td {
+      background: #ede9fe;
+      color: #4c1d95;
+    }
+    tr.row-grace td:first-child { border-left: 4px solid #7c3aed; }
+    .grace-tag {
+      display: inline-block; padding: 2px 7px; border-radius: 10px;
+      background: #ddd6fe; color: #5b21b6;
+      font-size: .7rem; font-weight: 700; margin-left: 4px;
+    }
+
+    /* ── Grace cuota badge in table ───────────────────────────────── */
+    .cuota-grace { font-size: .75rem; color: #7c3aed; font-weight: 600; display: block; margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -322,9 +351,13 @@
     </div>
     <div class="form-grid">
       <div class="field">
-        <label for="propValue">Valor propiedad (UF)</label>
+        <label id="propValueLabel">Valor propiedad</label>
+        <div class="currency-toggle">
+          <button id="btn-uf"  class="active" onclick="switchInputCurrency('UF')">UF</button>
+          <button id="btn-clp" class=""       onclick="switchInputCurrency('CLP')">$ Pesos</button>
+        </div>
         <div class="input-prefix">
-          <span>UF</span>
+          <span id="propPrefix">UF</span>
           <input type="number" id="propValue" min="500" max="50000" value="5000" step="50" />
         </div>
       </div>
@@ -347,6 +380,18 @@
         </select>
       </div>
       <div class="field">
+        <label for="gracePeriod">Meses de gracia</label>
+        <select id="gracePeriod">
+          <option value="0" selected>Sin período de gracia</option>
+          <option value="3">3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="9">9 meses</option>
+          <option value="12">12 meses</option>
+          <option value="18">18 meses</option>
+          <option value="24">24 meses</option>
+        </select>
+      </div>
+      <div class="field">
         <label for="rateType">Tipo de tasa</label>
         <select id="rateType">
           <option value="fija">Fija</option>
@@ -355,7 +400,7 @@
         </select>
       </div>
       <div class="field">
-        <label for="currency">Moneda</label>
+        <label for="currency">Mostrar resultados en</label>
         <select id="currency">
           <option value="UF">UF</option>
           <option value="CLP">CLP (pesos)</option>
@@ -391,7 +436,8 @@
             <th>Banco</th>
             <th class="right" data-tip="Tasa anual equivalente">CAE anual</th>
             <th class="right" data-tip="Tasa nominal anual">Tasa nominal</th>
-            <th class="right" data-tip="Cuota mensual (capital + intereses + seguro)">Cuota mensual</th>
+            <th class="right" data-tip="Cuota mensual durante período de gracia (solo intereses + seguros)">Cuota gracia</th>
+            <th class="right" data-tip="Cuota mensual normal (capital + intereses + seguro)">Cuota mensual</th>
             <th class="right" data-tip="Seguros mensuales estimados">Seguros</th>
             <th class="right" data-tip="Suma total pagada durante todo el plazo">Costo total</th>
             <th class="right" data-tip="Intereses totales pagados">Total intereses</th>
@@ -416,6 +462,7 @@
           <thead>
             <tr>
               <th class="center">Cuota N°</th>
+              <th class="center">Tipo</th>
               <th class="right">Cuota total</th>
               <th class="right">Capital</th>
               <th class="right">Intereses</th>
@@ -448,7 +495,8 @@
 
 <script>
 /* ─── Constants ───────────────────────────────────────────────────── */
-const UF_CLP = 38500; // UF value in CLP (referential May 2025)
+const UF_CLP = 38500;
+let inputCurrency = 'UF'; // tracks whether property value is entered in UF or CLP
 
 /* ─── Bank data ───────────────────────────────────────────────────── */
 // tasaFija/tasaVariable/tasaMixta: annual nominal rate %
@@ -583,7 +631,35 @@ function displayVal(v, currency) {
   return currency === 'UF' ? fmtUF(v) : fmtCLP(v * UF_CLP);
 }
 
-/* Monthly payment PMT in UF */
+/* ─── Input currency toggle ───────────────────────────────────────── */
+function switchInputCurrency(to) {
+  const input = document.getElementById('propValue');
+  const current = parseFloat(input.value) || 0;
+
+  if (to === inputCurrency) return;
+
+  if (to === 'CLP') {
+    input.min   = Math.round(500  * UF_CLP);
+    input.max   = Math.round(50000 * UF_CLP);
+    input.step  = 1000000;
+    input.value = Math.round(current * UF_CLP);
+    document.getElementById('propPrefix').textContent = '$';
+    document.getElementById('propValueLabel').textContent = 'Valor propiedad ($ pesos)';
+  } else {
+    input.min   = 500;
+    input.max   = 50000;
+    input.step  = 50;
+    input.value = Math.round((current / UF_CLP) * 100) / 100;
+    document.getElementById('propPrefix').textContent = 'UF';
+    document.getElementById('propValueLabel').textContent = 'Valor propiedad (UF)';
+  }
+
+  inputCurrency = to;
+  document.getElementById('btn-uf').classList.toggle('active',  to === 'UF');
+  document.getElementById('btn-clp').classList.toggle('active', to === 'CLP');
+}
+
+/* ─── PMT formula ─────────────────────────────────────────────────── */
 function pmt(rate, n, pv) {
   if (rate === 0) return pv / n;
   const r = rate / 12;
@@ -591,62 +667,70 @@ function pmt(rate, n, pv) {
 }
 
 /* ─── Core simulation ─────────────────────────────────────────────── */
-function calcBank(bank, loanUF, years, rateType, propValueUF) {
-  const n = years * 12;
-  const rate = rateType === 'fija'     ? bank.tasaFija     / 100
-             : rateType === 'variable'  ? bank.tasaVariable / 100
-             : bank.tasaMixta          / 100;
+function calcBank(bank, loanUF, years, rateType, propValueUF, gracePeriod) {
+  const n    = years * 12;
+  const rate = rateType === 'fija'    ? bank.tasaFija    / 100
+             : rateType === 'variable' ? bank.tasaVariable / 100
+             : bank.tasaMixta / 100;
+  const r = rate / 12;
 
-  const capitalPayment = pmt(rate, n, loanUF);
-
-  // Monthly insurance (on initial balance — simplified)
-  const segDesgrav  = loanUF * (bank.seguroDesgravamen / 100) / 12;
-  const segIncendio = propValueUF * (bank.seguroIncendio / 100) / 12;
+  const segDesgrav     = loanUF * (bank.seguroDesgravamen / 100) / 12;
+  const segIncendio    = propValueUF * (bank.seguroIncendio / 100) / 12;
   const totalInsurance = segDesgrav + segIncendio;
 
-  const monthlyTotal = capitalPayment + totalInsurance;
-  const totalPaid    = monthlyTotal * n + bank.gastosOp;
-  const totalInterest= totalPaid - loanUF - bank.gastosOp - totalInsurance * n;
-  const cae          = (rate * 100) + bank.caeOffset;
+  // Grace period: interest-only payments (balance does not decrease)
+  const graceInterest    = loanUF * r;
+  const graceMonthlyTotal = graceInterest + totalInsurance;
 
-  // Build amortization schedule
+  // After grace: full PMT recalculated over remaining months on same balance
+  const amortMonths   = n - gracePeriod;
+  const capitalPayment = pmt(rate, amortMonths, loanUF);
+  const monthlyTotal   = capitalPayment + totalInsurance;
+
+  const totalPaid     = graceMonthlyTotal * gracePeriod + monthlyTotal * amortMonths + bank.gastosOp;
+  const totalInterest = totalPaid - loanUF - bank.gastosOp - totalInsurance * n;
+  const cae           = (rate * 100) + bank.caeOffset;
+
+  // Amortization schedule
   const schedule = [];
   let balance = loanUF;
-  for (let i = 1; i <= n; i++) {
-    const interest = balance * (rate / 12);
+
+  for (let i = 1; i <= gracePeriod; i++) {
+    const interest = balance * r;
+    schedule.push({ cuota: i, total: graceMonthlyTotal, principal: 0, interest, insurance: totalInsurance, balance, isGrace: true });
+  }
+  for (let i = gracePeriod + 1; i <= n; i++) {
+    const interest  = balance * r;
     const principal = capitalPayment - interest;
     balance = Math.max(0, balance - principal);
-    schedule.push({ cuota: i, total: monthlyTotal, principal, interest, insurance: totalInsurance, balance });
+    schedule.push({ cuota: i, total: monthlyTotal, principal, interest, insurance: totalInsurance, balance, isGrace: false });
   }
 
   return {
-    bank,
-    rate: rate * 100,
-    cae,
-    capitalPayment,
-    insurance: totalInsurance,
-    monthlyTotal,
-    totalPaid,
-    totalInterest,
-    gastosOp: bank.gastosOp,
-    schedule,
+    bank, rate: rate * 100, cae,
+    graceMonthlyTotal, gracePeriod,
+    capitalPayment, insurance: totalInsurance,
+    monthlyTotal, totalPaid, totalInterest,
+    gastosOp: bank.gastosOp, schedule,
   };
 }
 
 /* ─── Simulate ────────────────────────────────────────────────────── */
 function simulate() {
-  const propValueUF  = parseFloat(document.getElementById('propValue').value);
+  const rawPropValue = parseFloat(document.getElementById('propValue').value);
   const downPct      = parseFloat(document.getElementById('downPayment').value) / 100;
   const years        = parseInt(document.getElementById('term').value);
   const rateType     = document.getElementById('rateType').value;
   const currency     = document.getElementById('currency').value;
+  const gracePeriod  = parseInt(document.getElementById('gracePeriod').value);
 
-  if (isNaN(propValueUF) || propValueUF <= 0) { alert('Ingresa un valor de propiedad válido.'); return; }
-  if (downPct < 0.10) { alert('El pie mínimo es 10%.'); return; }
+  if (isNaN(rawPropValue) || rawPropValue <= 0) { alert('Ingresa un valor de propiedad válido.'); return; }
+  if (downPct < 0.10)  { alert('El pie mínimo es 10%.'); return; }
+  if (gracePeriod >= years * 12) { alert('El período de gracia no puede ser mayor o igual al plazo total.'); return; }
 
-  const loanUF = propValueUF * (1 - downPct);
+  const propValueUF = inputCurrency === 'CLP' ? rawPropValue / UF_CLP : rawPropValue;
+  const loanUF      = propValueUF * (1 - downPct);
 
-  // Show spinner briefly for UX
   document.getElementById('spinner').style.display = 'block';
   document.getElementById('results').classList.add('hidden');
 
@@ -655,14 +739,13 @@ function simulate() {
 
     const results = BANKS
       .filter(b => Math.round((1 - downPct) * 100) <= b.financiamientoMax)
-      .map(b => calcBank(b, loanUF, years, rateType, propValueUF));
+      .map(b => calcBank(b, loanUF, years, rateType, propValueUF, gracePeriod));
 
-    // Sort by CAE ascending
     results.sort((a, b) => a.cae - b.cae);
     lastResults = results;
 
-    renderSummary(results, loanUF, propValueUF, downPct, years, currency);
-    renderTable(results, currency);
+    renderSummary(results, loanUF, propValueUF, downPct, years, currency, gracePeriod);
+    renderTable(results, currency, gracePeriod);
     renderAmortSelect(results);
     renderAmort();
 
@@ -672,19 +755,28 @@ function simulate() {
 }
 
 /* ─── Summary pills ───────────────────────────────────────────────── */
-function renderSummary(results, loanUF, propValueUF, downPct, years, currency) {
+function renderSummary(results, loanUF, propValueUF, downPct, years, currency, gracePeriod) {
   const best  = results[0];
   const worst = results[results.length - 1];
   const diff  = worst.monthlyTotal - best.monthlyTotal;
 
   const pills = [
-    { label: 'Monto financiado', value: displayVal(loanUF, currency) },
-    { label: 'Pie', value: displayVal(propValueUF * downPct, currency) + ' (' + Math.round(downPct * 100) + '%)' },
-    { label: 'Mejor cuota mensual', value: displayVal(best.monthlyTotal, currency), best: true },
-    { label: 'Mejor banco', value: best.bank.name, best: true },
-    { label: 'Mejor CAE', value: fmtPct(best.cae), best: true },
-    { label: 'Ahorro vs peor', value: displayVal(diff, currency) + '/mes', best: true },
+    { label: 'Monto financiado',    value: displayVal(loanUF, currency) },
+    { label: 'Pie',                 value: displayVal(propValueUF * downPct, currency) + ' (' + Math.round(downPct * 100) + '%)' },
   ];
+
+  if (gracePeriod > 0) {
+    pills.push({ label: 'Cuota período gracia', value: displayVal(best.graceMonthlyTotal, currency), best: true });
+    pills.push({ label: 'Cuota normal (mejor)', value: displayVal(best.monthlyTotal, currency), best: true });
+  } else {
+    pills.push({ label: 'Mejor cuota mensual', value: displayVal(best.monthlyTotal, currency), best: true });
+  }
+
+  pills.push(
+    { label: 'Mejor banco',  value: best.bank.name,       best: true },
+    { label: 'Mejor CAE',    value: fmtPct(best.cae),     best: true },
+    { label: 'Ahorro vs peor', value: displayVal(diff, currency) + '/mes', best: true },
+  );
 
   document.getElementById('summary-pills').innerHTML = pills.map(p => `
     <div class="pill ${p.best ? 'best' : ''}">
@@ -695,32 +787,36 @@ function renderSummary(results, loanUF, propValueUF, downPct, years, currency) {
 }
 
 /* ─── Comparison table ────────────────────────────────────────────── */
-function renderTable(results, currency) {
-  const bestCAE     = results[0].cae;
+function renderTable(results, currency, gracePeriod) {
   const bestMonthly = results[0].monthlyTotal;
-  const worstCAE    = results[results.length - 1].cae;
+  const maxDiff     = results[results.length - 1].monthlyTotal - results[0].monthlyTotal;
+  const medals      = ['🥇','🥈','🥉'];
 
-  const medals = ['🥇','🥈','🥉'];
-  const maxDiff = results[results.length - 1].monthlyTotal - results[0].monthlyTotal;
+  // Show/hide the grace cuota column header
+  document.querySelectorAll('th[data-tip="Cuota mensual durante período de gracia (solo intereses + seguros)"]').forEach(th => {
+    th.style.display = gracePeriod > 0 ? '' : 'none';
+  });
 
   const rows = results.map((r, i) => {
     const isBest  = i === 0;
     const isWorst = i === results.length - 1;
-    const isMid   = !isBest && !isWorst && i <= Math.floor(results.length / 2);
 
-    const rowClass = isBest ? 'row-best' : isWorst ? 'row-worst' : (isMid ? '' : '');
-    const caeClass = isBest ? 'val-best' : isWorst ? 'val-worst' : 'val-mid';
+    const rowClass   = isBest ? 'row-best' : isWorst ? 'row-worst' : '';
+    const caeClass   = isBest ? 'val-best' : isWorst ? 'val-worst' : 'val-mid';
     const monthClass = isBest ? 'val-best' : isWorst ? 'val-worst' : '';
 
     const badge = isBest  ? '<span class="badge badge-green">Mejor</span>'
                 : isWorst ? '<span class="badge badge-red">Más caro</span>'
                 : i < 3   ? '<span class="badge badge-blue">Top 3</span>' : '';
 
-    const diff = r.monthlyTotal - bestMonthly;
-    const barPct = maxDiff > 0 ? Math.round((diff / maxDiff) * 100) : 0;
+    const diff     = r.monthlyTotal - bestMonthly;
+    const barPct   = maxDiff > 0 ? Math.round((diff / maxDiff) * 100) : 0;
     const barColor = isBest ? '#059669' : isWorst ? '#dc2626' : '#f59e0b';
-
     const initials = r.bank.name.substring(0, 2).toUpperCase();
+
+    const graceTd = gracePeriod > 0
+      ? `<td class="right" style="color:#7c3aed;font-weight:600">${displayVal(r.graceMonthlyTotal, currency)}</td>`
+      : `<td class="right" style="display:none"></td>`;
 
     return `<tr class="${rowClass}">
       <td class="center"><span class="rank">${medals[i] || (i + 1)}</span></td>
@@ -735,6 +831,7 @@ function renderTable(results, currency) {
       </td>
       <td class="right"><strong class="${caeClass}">${fmtPct(r.cae)}</strong></td>
       <td class="right">${fmtPct(r.rate)}</td>
+      ${graceTd}
       <td class="right"><strong class="${monthClass}">${displayVal(r.monthlyTotal, currency)}</strong></td>
       <td class="right" style="color:var(--gray-600)">${displayVal(r.insurance, currency)}</td>
       <td class="right">${displayVal(r.totalPaid, currency)}</td>
@@ -758,31 +855,35 @@ function renderTable(results, currency) {
 
 /* ─── Amortization select ─────────────────────────────────────────── */
 function renderAmortSelect(results) {
-  const sel = document.getElementById('amort-bank');
-  sel.innerHTML = results.map((r, i) =>
+  document.getElementById('amort-bank').innerHTML = results.map((r, i) =>
     `<option value="${i}">${r.bank.name} – CAE ${fmtPct(r.cae)}</option>`
   ).join('');
 }
 
 /* ─── Amortization table ──────────────────────────────────────────── */
 function renderAmort() {
-  const idx      = parseInt(document.getElementById('amort-bank').value || '0');
-  const r        = lastResults[idx];
+  const idx = parseInt(document.getElementById('amort-bank').value || '0');
+  const r   = lastResults[idx];
   if (!r) return;
 
-  const currency = document.getElementById('currency').value;
-  const n        = r.schedule.length;
+  const currency     = document.getElementById('currency').value;
   const totalCapital = r.schedule.reduce((s, x) => s + x.principal, 0);
 
   let capitalAccum = 0;
   const rows = r.schedule.map(s => {
     capitalAccum += s.principal;
-    const capitalPct = ((capitalAccum / totalCapital) * 100).toFixed(1);
-    const barW = Math.round(capitalAccum / totalCapital * 60);
-    return `<tr>
+    const capitalPct = totalCapital > 0 ? ((capitalAccum / totalCapital) * 100).toFixed(1) : '0.0';
+    const barW = totalCapital > 0 ? Math.round(capitalAccum / totalCapital * 60) : 0;
+    const rowClass = s.isGrace ? 'row-grace' : '';
+    const tipoCell = s.isGrace
+      ? '<span class="grace-tag">Gracia</span>'
+      : '<span style="font-size:.75rem;color:var(--gray-400)">Normal</span>';
+
+    return `<tr class="${rowClass}">
       <td class="center">${s.cuota}</td>
+      <td class="center">${tipoCell}</td>
       <td class="right">${displayVal(s.total, currency)}</td>
-      <td class="right">${displayVal(s.principal, currency)}</td>
+      <td class="right">${s.isGrace ? '<span style="color:var(--gray-400)">—</span>' : displayVal(s.principal, currency)}</td>
       <td class="right" style="color:var(--red)">${displayVal(s.interest, currency)}</td>
       <td class="right" style="color:var(--gray-400)">${displayVal(s.insurance, currency)}</td>
       <td class="right" style="color:var(--primary)">${displayVal(s.balance, currency)}</td>
@@ -800,11 +901,8 @@ function renderAmort() {
 
 /* ─── Auto-simulate on load ───────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
-  // Update UF display
   document.getElementById('uf-value').textContent =
     '$' + UF_CLP.toLocaleString('es-CL') + ' CLP';
-
-  // Run default simulation
   simulate();
 });
 </script>
